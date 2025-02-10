@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>recibo</title>
+    <style>
+        body {
+          width: 6.8cm;
+          height: 14cm;
+          margin: 0 auto;
+          
+
+        }
+        .container {
+            font-size: 14px; 
+            font-family: Arial, sans-serif;
+            margin-left: 0.5cm;
+            margin-top: 0.5cm;
+            
+        }
+        h2 {
+            font-size: 15px;
+            font-family: 'Lexend', sans-serif;
+            margin-bottom: 15px; /* Reduce el margen inferior del título */
+            line-height: 1; /* Controla la altura de línea dentro del título */
+            text-align: center;
+            margin-top: -0.1cm;
+        }
+        .centrar-texto {
+            text-align: center;
+        }
+    </style>
+    <script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const campos = ["Nombre", "apellido", "Fecha", "monto", "tipo_operacion", "motivo", "saldo"];
+
+        // Rellenar los campos si existen en los parámetros de la URL
+        campos.forEach(campo => {
+            const valor = urlParams.get(campo);
+            if (valor !== null) {
+                const elemento = document.getElementById(campo);
+                elemento.innerHTML = valor;
+            }
+        });
+
+        // Imprimir automáticamente
+        window.print();
+    }
+
+    window.onload = getQueryParams; // Ejecutar al cargar la página
+</script>
+</head>
+<body onload="getQueryParams()" onfocus="window.close()">
+    <div class="centrar-texto">
+        <p style="font-size: 14px;font-family: 'Roboto', sans-serif; margin-bottom: -10px; margin-top: 1cm; font-weight: 200;">HELADERÍA PRIMAVERA</p>
+        <p style="font-size: 12px;font-family: Arial, sans-serif;">TELÉFONO: 73196102 - 72627865</p> 
+        <h2>COMPROBANTE</h2>
+    </div>
+      <div class="container">    
+        <p>Nombre:<span style="margin-left: 4px;" id=Nombre></span><span style="margin-left: 3px;" id=apellido></span></p>
+         <P>Fecha:<span style="padding-left: 4px; " id="Fecha"></span>
+         </P><P>Monto:<span style="margin-left: 4px;" id="monto"></span></p> <p>Tipo de operacion:<span style="margin-left: 4px;" id=tipo_operacion></span></p> <p>Motivo:<span style="margin-left: 4px;" id=motivo></span></p> <p>Saldo:<span style="margin-left: 4px;" id=saldo></span></p>
+     </div> 
+     <div class="centrar-texto">
+     <p style="margin-bottom:-15px; margin-top: 1.5cm;" >---------------------</p>
+     <p style="font-size: 14px;font-family: 'Roboto', sans-serif;">Firma o sello</p>
+     </div>
+</body>
