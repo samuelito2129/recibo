@@ -51,9 +51,9 @@
     // Función para obtener los parámetros de la URL
     function getQueryParams() {
         const urlParams = new URLSearchParams(window.location.search);
-        const campos = ["Nombre", "apellido", "Fecha", "monto", "tipo_operacion", "motivo", "saldo"];
+        const campos = ["Nombre", "apellido", "Fecha", "monto", "tipo_operacion", "motivo"];
 
-        // Rellenar los campos si existen en los parámetros de la URL
+        // Rellenar los campos si existen en los parámetros de la URL (excepto saldo que se trata aparte)
         campos.forEach(campo => {
             const valor = urlParams.get(campo);
             if (valor !== null) {
@@ -61,8 +61,26 @@
                 elemento.innerHTML = valor;
             }
         });
-         if (!urlParams.get("motivo")) {
+        // Mostrar/ocultar fila motivo
+        if (!urlParams.get("motivo")) {
             document.getElementById("fila-motivo").style.display = "none";
+        }
+
+        // Tratamiento especial para saldo: si no viene, lo dejamos vacío; si viene y equivale a 0, mostramos "No tiene"
+        const saldoParam = urlParams.get("saldo");
+        const saldoElem = document.getElementById("saldo");
+        if (saldoParam === null) {
+            // no hacer nada
+        } else {
+            // Limpiar el valor para extraer sólo el número (quitar símbolos de moneda, comas, espacios)
+            const limpio = saldoParam.replace(/[^0-9.-]+/g, "").trim();
+            const numero = limpio === "" ? NaN : Number(limpio);
+            if (!isNaN(numero) && numero === 0) {
+                saldoElem.innerHTML = "No tiene";
+            } else {
+                // Si no es numérico o distinto de 0, mostramos tal cual el parámetro original
+                saldoElem.innerHTML = saldoParam;
+            }
         }
 
         // Imprimir automáticamente
