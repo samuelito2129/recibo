@@ -81,8 +81,16 @@
         if (esCeroValido(saldoParam)) {
             saldoElem.innerHTML = "No tiene";
         } else {
-            // Si tiene un valor distinto de cero, lo mostramos tal cual
-            saldoElem.innerHTML = saldoParam;
+            // Intentar formatear como número. Si es mayor que 0, mostrar con prefijo "Bs" y dos decimales
+            const limpio = String(saldoParam).replace(/[^0-9.-]+/g, "").trim();
+            const numero = limpio === "" ? NaN : Number(limpio);
+            if (!isNaN(numero) && numero > 0) {
+                // Usar toFixed(2) para dos decimales y reemplazar punto decimal por coma si prefieres formato local
+                saldoElem.innerHTML = "Bs " + numero.toFixed(2);
+            } else {
+                // Si no es numérico o no es mayor que 0, mostrar el valor original
+                saldoElem.innerHTML = saldoParam;
+            }
         }
 
         // Imprimir automáticamente
@@ -131,4 +139,3 @@
      </div>
     
 </body>
-
