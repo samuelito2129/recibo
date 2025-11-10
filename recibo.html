@@ -85,8 +85,8 @@
             const limpio = String(saldoParam).replace(/[^0-9.-]+/g, "").trim();
             const numero = limpio === "" ? NaN : Number(limpio);
             if (!isNaN(numero) && numero > 0) {
-                // Usar toFixed(2) para dos decimales y reemplazar punto decimal por coma si prefieres formato local
-                saldoElem.innerHTML = "Bs " + numero.toFixed(2);
+                // Usar toFixed(2) para dos decimales y colocar el símbolo a la derecha
+                saldoElem.innerHTML = numero.toFixed(2) + " Bs";
             } else {
                 // Si no es numérico o no es mayor que 0, mostrar el valor original
                 saldoElem.innerHTML = saldoParam;
