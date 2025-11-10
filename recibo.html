@@ -66,21 +66,23 @@
             document.getElementById("fila-motivo").style.display = "none";
         }
 
-        // Tratamiento especial para saldo: si no viene, lo dejamos vacío; si viene y equivale a 0, mostramos "No tiene"
+        // Tratamiento especial para saldo: si no viene o está vacío, o si equivale a 0, mostramos "No tiene deuda pendiente"
         const saldoParam = urlParams.get("saldo");
         const saldoElem = document.getElementById("saldo");
-        if (saldoParam === null) {
-            // no hacer nada
+        // función auxiliar para determinar si un valor representa cero
+        function esCeroValido(valor) {
+            if (valor === null) return true; // ausencia se trata como 0
+            const limpio = String(valor).replace(/[^0-9.-]+/g, "").trim();
+            if (limpio === "") return true; // cadena vacía -> tratar como 0
+            const numero = Number(limpio);
+            return !isNaN(numero) && numero === 0;
+        }
+
+        if (esCeroValido(saldoParam)) {
+            saldoElem.innerHTML = "No tiene deuda pendiente";
         } else {
-            // Limpiar el valor para extraer sólo el número (quitar símbolos de moneda, comas, espacios)
-            const limpio = saldoParam.replace(/[^0-9.-]+/g, "").trim();
-            const numero = limpio === "" ? NaN : Number(limpio);
-            if (!isNaN(numero) && numero === 0) {
-                saldoElem.innerHTML = "No tiene";
-            } else {
-                // Si no es numérico o distinto de 0, mostramos tal cual el parámetro original
-                saldoElem.innerHTML = saldoParam;
-            }
+            // Si tiene un valor distinto de cero, lo mostramos tal cual
+            saldoElem.innerHTML = saldoParam;
         }
 
         // Imprimir automáticamente
