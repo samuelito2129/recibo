@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>recibo</title>
     <style>
-        body {
-          width: 6.8cm;
-          height: 14cm;
-          margin:0 auto;
+                body {
+                    width: 6.8cm;
+                    height: 14cm;
+                    margin: 0.5cm auto;
           
-
-        }
+                }
         .container {
             font-size: 14px; 
             font-family: Arial, sans-serif;
@@ -85,8 +84,8 @@
             const limpio = String(saldoParam).replace(/[^0-9.-]+/g, "").trim();
             const numero = limpio === "" ? NaN : Number(limpio);
             if (!isNaN(numero) && numero > 0) {
-                // Usar toFixed(2) para dos decimales y colocar el símbolo a la derecha
-                saldoElem.innerHTML = numero.toFixed(2) + " Bs";
+                // Mostrar el número tal como se convirtió (sin forzar a 2 decimales) y colocar el símbolo a la derecha
+                saldoElem.innerHTML = String(numero) + " Bs";
             } else {
                 // Si no es numérico o no es mayor que 0, mostrar el valor original
                 saldoElem.innerHTML = saldoParam;
@@ -139,4 +138,3 @@
      </div>
     
 </body>
-
