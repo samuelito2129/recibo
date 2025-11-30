@@ -65,14 +65,26 @@
         if (!urlParams.get("motivo")) {
             document.getElementById("fila-motivo").style.display = "none";
         }
-        // Mostrar/ocultar párrafo Fact. Impagos según el contenido
+        // Mostrar/ocultar párrafo Fact. Impagos según el contenido (vacío o equivalente a 0)
         (function() {
             const ventasElem = document.getElementById("ventas_impagos");
             const ventasParam = urlParams.get("ventas_impagos");
-            // Si no hay parámetro o está vacío, ocultamos el párrafo que contiene el span
             if (!ventasElem) return;
             const contenido = (ventasParam !== null) ? String(ventasParam).trim() : String(ventasElem.textContent || "").trim();
-            if (contenido === "") {
+
+            // Determina si el valor representa cero (ej: "0", "0.00", "$0", "0,00")
+            function esCeroLike(valor) {
+                if (valor === null) return true; // ausencia -> tratar como vacío/0
+                const s = String(valor).trim();
+                if (s === "") return true; // cadena vacía -> ocultar
+                // Extraer solo signos y dígitos para intentar detectar número 0
+                const limpio = s.replace(/[^0-9.-]+/g, "").trim();
+                if (limpio === "") return false; // no es numérico (ej: "F0001") -> no ocultar
+                const numero = Number(limpio);
+                return !isNaN(numero) && numero === 0;
+            }
+
+            if (contenido === "" || esCeroLike(contenido)) {
                 const pPadre = ventasElem.closest('p');
                 if (pPadre) {
                     pPadre.style.display = 'none';
@@ -80,7 +92,7 @@
                     ventasElem.style.display = 'none';
                 }
             } else {
-                // Si viene contenido en la URL, asegurarnos de mostrarlo
+                // Mostrar contenido (viene en URL o ya estaba en el DOM)
                 ventasElem.innerHTML = contenido;
             }
         })();
@@ -151,7 +163,7 @@
             </tr>
         </table>
         
-         <p style="font-size: 13px;margin-top: 7px;margin-bottom: -1px;">Fact. Impagos:<span style="margin-left: 4px;" id="ventas_impagos"></span></p>
+         <p style="font-size: 13px;margin-top: 7px;margin-bottom: 0px;">Fact. Impagos:<span style="margin-left: 4px;" id="ventas_impagos"></span></p>
           <p style="font-size: 13px;margin-top: 6px">Saldo:<span style="margin-left: 4px;" id=saldo></span></p>
      </div> 
      <div class="centrar-texto">
