@@ -35,6 +35,7 @@
             border-collapse: collapse;
             border-top: 2px dashed black;
             border-bottom: 2px dashed black;
+            margin-bottom: 6px;
         }
         td {
             padding: 4px;
@@ -50,7 +51,7 @@
     // Función para obtener los parámetros de la URL
     function getQueryParams() {
         const urlParams = new URLSearchParams(window.location.search);
-        const campos = ["Nombre", "apellido", "Fecha", "monto", "tipo_operacion", "motivo"];
+        const campos = ["Nombre", "apellido", "Fecha", "monto", "tipo_operacion", "motivo","ventas_impagos"];
 
         // Rellenar los campos si existen en los parámetros de la URL (excepto saldo que se trata aparte)
         campos.forEach(campo => {
@@ -64,6 +65,25 @@
         if (!urlParams.get("motivo")) {
             document.getElementById("fila-motivo").style.display = "none";
         }
+        // Mostrar/ocultar párrafo Fact. Impagos según el contenido
+        (function() {
+            const ventasElem = document.getElementById("ventas_impagos");
+            const ventasParam = urlParams.get("ventas_impagos");
+            // Si no hay parámetro o está vacío, ocultamos el párrafo que contiene el span
+            if (!ventasElem) return;
+            const contenido = (ventasParam !== null) ? String(ventasParam).trim() : String(ventasElem.textContent || "").trim();
+            if (contenido === "") {
+                const pPadre = ventasElem.closest('p');
+                if (pPadre) {
+                    pPadre.style.display = 'none';
+                } else {
+                    ventasElem.style.display = 'none';
+                }
+            } else {
+                // Si viene contenido en la URL, asegurarnos de mostrarlo
+                ventasElem.innerHTML = contenido;
+            }
+        })();
 
         // Tratamiento especial para saldo: si no viene o está vacío, o si equivale a 0, mostramos "No tiene deuda pendiente"
         const saldoParam = urlParams.get("saldo");
@@ -130,7 +150,9 @@
                 <td><span id="motivo"></span></td>
             </tr>
         </table>
-         <p style="font-size: 13px;">Saldo:<span style="margin-left: 4px;" id=saldo></span></p>
+        
+         <p style="font-size: 13px;margin-top: 7px;margin-bottom: -3px;">Fact. Impagos:<span style="margin-left: 4px;" id="ventas_impagos"></span></p>
+          <p style="font-size: 13px;margin-top: 6px">Saldo:<span style="margin-left: 4px;" id=saldo></span></p>
      </div> 
      <div class="centrar-texto">
      <p style="margin-bottom:-15px; margin-top: 1.5cm;" >---------------------</p>
@@ -138,3 +160,4 @@
      </div>
     
 </body>
+
